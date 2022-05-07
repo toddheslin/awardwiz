@@ -6,6 +6,7 @@ import useDeepCompareEffect from "use-deep-compare-effect"
 import moment from "moment"
 import { DebugTreeNode, genNewDebugTreeNode, useDebugTree } from "../components/DebugTree"
 import type { LambdaRequest, LambdaResponse, SearchQuery } from "../types/types"
+//import type { SearchQuery } from "../types/types"
 import { FR24SearchResult } from "../types/fr24"
 import { FlightWithFares, ScraperQuery, ScraperResults } from "../types/scrapers"
 import PhAirplaneTilt from "~icons/ph/airplane-tilt"
@@ -116,8 +117,8 @@ export const useAwardSearch = (searchQuery: SearchQuery) => {
           const code = scraperCode[path] as unknown as string
 
           const transpileOptions: ts.CompilerOptions = {
-            target: ts.ScriptTarget.ESNext,
-            lib: ["esnext"],
+            target: ts.ScriptTarget.ES5,
+            //lib: ["esnext"],
             esModuleInterop: false,
             allowSyntheticDefaultImports: true,
             module: ts.ModuleKind.CommonJS,
@@ -129,8 +130,12 @@ export const useAwardSearch = (searchQuery: SearchQuery) => {
 
           const out = ts.transpile(code, transpileOptions)
 
+          // const postData = { code, context: scraperQuery }
+          // const scraperResults = (await axios.post<ScraperResults>("http://localhost:4000/function", postData, { signal })).data
+
           const postData: LambdaRequest = { code: out, context: scraperQuery, browser: "chromium", browserArgs: [] }
-          const lambdaResponse = (await axios.post<LambdaResponse>("http://localhost:9000/2015-03-31/functions/function/invocations", postData, { signal })).data
+          const lambdaResponse = (await axios.post<LambdaResponse>("http://localhost:9001/2015-03-31/functions/function/invocations", postData, { signal })).data
+          debugger
           debugTree({ type: "update", payload: { key: `${scraperQuery.origin}${scraperQuery.destination}${scraperQuery.scraper}`, updateData: { textB: `Success after ${Date.now() - startTime}ms`, isLoading: false } } })
           return lambdaResponse.scraperResults.flightsWithFares
         },

@@ -1,10 +1,11 @@
 {
   "main": "index.js",
   "private": false,
-  "dependencies": {
-    "playwright": "^1.21.1"
-  },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.95"
+  },
+  "dependencies": {
+    "playwright-aws-lambda": "^0.7.0",
+    "playwright-core": "^1.21.1"
   }
 }

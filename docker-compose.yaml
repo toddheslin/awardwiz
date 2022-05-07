@@ -1,12 +1,49 @@
 version: '3'
 services:
   awardwiz-lambda:
-    build:
-      context: awardwiz-lambda
-      dockerfile: Dockerfile
-      labels:
-        - awardwiz-lambda
+    image: lambci/lambda:build-nodejs12.x
     container_name: awardwiz-lambda
-    restart: always
+    environment:
+      - DOCKER_LAMBDA_STAY_OPEN=1
+      - DOCKER_LAMBDA_WATCH=1
+    volumes:
+      - ./awardwiz-lambda/function:/var/task
     ports:
-      - "9000:8080"
+      - "9001:9001"
+    command: ["bash", "-c", "npm install && /var/rapid/init --bootstrap /var/runtime/bootstrap --enable-msg-logs index.handler"]
+
+  # awardwiz-lambda:
+  #   image: lambci/lambda:build-nodejs12.x
+  #   container_name: awardwiz-lambda
+  #   environment:
+  #     - DOCKER_LAMBDA_STAY_OPEN=1
+  #     - DOCKER_LAMBDA_WATCH=1
+  #   volumes:
+  #     - ./awardwiz-lambda/function:/var/task
+  #   ports:
+  #     - "9001:9001"
+  #   command: ["bash", "-c", "npm install && npx playwright install-deps && npx playwright install && /var/rapid/init --bootstrap /var/runtime/bootstrap --enable-msg-logs index.handler"]
+
+  # awardwiz-lambda:
+  #   build:
+  #     context: awardwiz-lambda
+  #     dockerfile: Dockerfile
+  #     labels:
+  #       - awardwiz-lambda
+  #   container_name: awardwiz-lambda
+  #   restart: always
+  #   environment:
+  #     - DOCKER_LAMBDA_STAY_OPEN=1
+  #   ports:
+  #     - "9001:9001"
+
+  # awardwiz-lambda:
+  #   build:
+  #     context: awardwiz-lambda
+  #     dockerfile: Dockerfile
+  #     labels:
+  #       - awardwiz-lambda
+  #   container_name: awardwiz-lambda
+  #   restart: always
+  #   ports:
+  #     - "9000:8080"
